@@ -1,0 +1,53 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+
+public class DiceRoll : MonoBehaviour
+{
+    public int lowDice = 1;
+    public int highDice = 6;
+    public int finalNum;
+    public TextMeshProUGUI numText;
+    public BoardMovement bm;
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            Debug.Log("Space");
+            //Get Actual Number
+            finalNum = getNum();
+            //Visualise Dice Roll
+            StartCoroutine(rollNumber());
+            StartCoroutine(bm.UpdatePlayer(finalNum));
+
+        }
+    }
+    public int getNum()
+    {
+        return Random.Range(lowDice, highDice);
+    }
+
+    IEnumerator rollNumber()
+    {
+        //Run visually multiple times
+        int rollCount = 0;
+        Debug.Log("roll num");
+        //Visual Numbers
+        for (int y = 0; y < 7; y++)
+        {
+            numText.text = y.ToString();
+            yield return new WaitForSeconds(.1f);
+            if (rollCount == 3)
+            {
+                numText.text = finalNum.ToString();
+            }
+            else
+            {
+                if (y == 6) { y = 0; }
+                rollCount++;
+            }
+        }
+        
+
+    }
+}
