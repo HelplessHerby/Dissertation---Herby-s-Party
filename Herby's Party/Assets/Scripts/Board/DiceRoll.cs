@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DiceRoll : MonoBehaviour
 {
+    public bool canRoll = true;
     public int lowDice = 1;
     public int highDice = 6;
     public int finalNum;
@@ -11,16 +12,20 @@ public class DiceRoll : MonoBehaviour
     public BoardMovement bm;
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (canRoll)
         {
-            Debug.Log("Space");
-            //Get Actual Number
-            finalNum = getNum();
-            //Visualise Dice Roll
-            StartCoroutine(rollNumber());
-            StartCoroutine(bm.UpdatePlayer(finalNum));
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                Debug.Log("Space");
+                //Get Actual Number
+                finalNum = getNum();
+                //Visualise Dice Roll
+                StartCoroutine(rollNumber());
+                StartCoroutine(bm.UpdatePlayer(finalNum));
 
+            }
         }
+
     }
     public int getNum()
     {
