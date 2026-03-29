@@ -14,16 +14,19 @@ public class DiceRoll : MonoBehaviour
     {
         if (canRoll)
         {
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                Debug.Log("Space");
-                //Get Actual Number
-                finalNum = getNum();
-                //Visualise Dice Roll
-                StartCoroutine(rollNumber());
-                StartCoroutine(bm.UpdatePlayer(finalNum));
+        }
 
-            }
+    }
+    public void Roll()
+    {
+        if (canRoll)
+        {
+            Debug.Log("Space");
+            //Get Actual Number
+            finalNum = getNum();
+            //Visualise Dice Roll
+            StartCoroutine(rollNumber());
+            StartCoroutine(bm.UpdatePlayer(finalNum));
         }
 
     }
