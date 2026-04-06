@@ -1,36 +1,49 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
+using System.Collections;
 
 public class ControllerBinder : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    IEnumerator Start()
     {
-        BindControllers();
-    }
+        // Wait until GameSession singleton exists
+        while (GameSession.instance == null || GameSession.instance.players == null)
+            yield return null;
 
-    void BindControllers()
-    {
         var players = GameSession.instance.players;
         var gamepads = Gamepad.all;
-        Debug.LogError($"Only have {gamepads.Count} +  controllers connected");
-        
 
+        // Unpair all devices first to avoid multiple players sharing the same controller
+        foreach (var p in players)
+        {
+            if (p != null && p.user.valid)
+                p.user.UnpairDevices();
+        }
+
+        // Assign controllers
         for (int i = 0; i < players.Length; i++)
         {
-            var p = players[i];
-            var pad = gamepads[i];
+            var player = players[i];
 
-            //Clear
-            
-            p.user.UnpairDevices();
+            if (player == null)
+            {
+                Debug.LogWarning($"Player {i + 1} is null, skipping");
+                continue;
+            }
 
-            //Assign
-            InputUser.PerformPairingWithDevice(pad, p.user);
-
-
-            Debug.Log($"Player {i + 1} assigned to {pad.displayName}");
+            if (i < gamepads.Count)
+            {
+                var pad = gamepads[i];
+                InputUser.PerformPairingWithDevice(pad, player.user);
+                Debug.Log($"Player {i + 1} ← {pad.displayName}");
+            }
+            else
+            {
+                // No controller → disable player input
+                player.DeactivateInput();
+                Debug.Log($"Player {i + 1} has no controller (disabled)");
+            }
         }
     }
 }
