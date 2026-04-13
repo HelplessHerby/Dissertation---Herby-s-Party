@@ -3,43 +3,57 @@ using UnityEngine.InputSystem;
 
 public class GameBehaviour : MonoBehaviour
 {
-    [Header("Player 1")]
-    public PlayerInput p1Input;
-    public GameObject p1cam;
-    public BoardMovement p1BM;
-    [Header("Player 2")]
-    public PlayerInput p2Input;
-    public GameObject p2cam;
-    public BoardMovement p2BM;
-    public PlayerInput p3Input;
-    public PlayerInput p4Input;
+    [Header("Players")]
+    public PlayerInput[] inputs;
+    public BoardMovement[] players;
+    public GameObject[] cams;
 
-    public int curPlay;
+    private int curPlay = 0;
+    private bool turnActive = false;
 
+    private void Start()
+    {
+        StartTurn();
+    }
     private void Update()
     {
-        switch (curPlay)
+        if (!turnActive) return;
+
+        BoardMovement curPlayer = players[curPlay];
+
+        if (curPlayer.turnFinished)
         {
-            case 0:
-                break;
-            case 1:
-                p1BM.canMove = true;
-                p2cam.SetActive(false);
-                p1cam.SetActive(true);
-                if (p1BM.finished)
-                {
-                    curPlay = 2;
-                }
-                break;
-            case 2:
-                p1cam.SetActive(false);
-                p2cam.SetActive(true);
-                p2BM.canMove = true;
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
+            EndTurn();
         }
     }
+
+    void StartTurn()
+    {
+        Debug.Log($"Player {curPlay + 1} Turn has Started");
+
+        turnActive = true;
+
+        for (int i = 0; i < inputs.Length; i++)
+        {
+            inputs[i].enabled = (i == curPlay);
+            cams[i].SetActive(i == curPlay);
+        }
+
+        players[curPlay].turnFinished = false;
+    }
+    void EndTurn()
+    {
+        Debug.Log($"Player {curPlay + 1} turn End");
+        turnActive = false;
+
+        curPlay++;
+
+        if(curPlay >= players.Length)
+        {
+            curPlay = 0;
+        }
+
+        StartTurn();
+    }
+
 }

@@ -9,7 +9,12 @@ public class DiceRoll : MonoBehaviour
     public int highDice = 6;
     public int finalNum;
     public TextMeshProUGUI numText;
-    public BoardMovement bm;
+    private BoardMovement bm;
+
+    private void Start()
+    {
+        bm = GetComponent<BoardMovement>();
+    }
     private void Update()
     {
         if (canRoll)

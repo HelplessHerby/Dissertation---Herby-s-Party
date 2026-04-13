@@ -4,13 +4,13 @@ using UnityEngine.AI;
 
 public class BoardMovement : MonoBehaviour
 {
-    public DiceRoll dr;
+    private DiceRoll dr;
     public GameObject[] tileArr;
     public GameObject tilePar;
     public NavMeshAgent agent;
     public int curTileIndex = 0;
-    public bool canMove = false;
-    public bool finished;
+    public bool isMoving = false;
+    public bool turnFinished;
     public void Start()
     {
         tileArr = new GameObject[tilePar.transform.childCount];
@@ -23,14 +23,14 @@ public class BoardMovement : MonoBehaviour
     private void Update()
     {
         //Playtesting purposes
-        dr.canRoll = canMove;
-        if(finished) canMove = false;
+        dr.canRoll = !isMoving;
     }
 
     public IEnumerator UpdatePlayer(int moveAmount)
     {
+        turnFinished = false;
         dr.canRoll = false; // disable while moving
-
+        isMoving = true;
         int targetIndex = moveAmount + curTileIndex;
 
         //clamp
@@ -39,14 +39,18 @@ public class BoardMovement : MonoBehaviour
         }
 
 
-        for (int i = curTileIndex; i <= targetIndex; i++)
+        for (int i = curTileIndex + 1; i <= targetIndex; i++)
         {
-
-            if (!canMove) yield break;
+            
 
             GameObject nextTile = tileArr[i];
             agent.destination = nextTile.transform.position;
             Debug.Log($"Moving to {nextTile.name}");
+
+            while (agent.pathPending || agent.remainingDistance > 0.05f)
+            {
+                yield return null;
+            }
 
             curTileIndex = i;
             //Special Tiles
@@ -54,14 +58,11 @@ public class BoardMovement : MonoBehaviour
             if (tb.shouldBreak)
             {
                 tb.activate();
-                canMove = false;
-            }
-
-            //check if reached end
-            if (curTileIndex == targetIndex) { 
-                finished = true;
-                canMove = false;
+                isMoving = false;
             }
         }
+        isMoving = false;
+        turnFinished = true;
+
     }
 }
