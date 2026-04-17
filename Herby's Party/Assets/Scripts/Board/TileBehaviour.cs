@@ -42,7 +42,7 @@ public class TileBehaviour : MonoBehaviour
             case 2:
                 break;
             case 3:
-                SceneManager.LoadScene(levelToLoad);
+                //SceneManager.LoadScene(levelToLoad);
                 break;
             case 4:
                 break;

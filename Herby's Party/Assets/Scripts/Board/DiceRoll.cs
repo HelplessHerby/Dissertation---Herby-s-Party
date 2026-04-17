@@ -17,27 +17,57 @@ public class DiceRoll : MonoBehaviour
     }
     private void Update()
     {
-        if (canRoll)
-        {
-        }
-
     }
     public void Roll()
     {
-        if (canRoll)
-        {
-            Debug.Log("Space");
-            //Get Actual Number
-            finalNum = getNum();
-            //Visualise Dice Roll
-            StartCoroutine(rollNumber());
-            StartCoroutine(bm.UpdatePlayer(finalNum));
-        }
+        if (!canRoll) return;
+        bm.turnFinished = false;
+
+        StartCoroutine(RollRoutine());
 
     }
     public int getNum()
     {
-        return Random.Range(lowDice, highDice);
+        return Random.Range(lowDice, highDice + 1);
+    }
+
+    void EventRoll()
+    {
+        finalNum = getNum();
+        StartCoroutine(rollNumber());
+        int moveAmount;
+
+        if(finalNum > 4)
+        {
+            Debug.Log("win");
+            moveAmount = finalNum;
+        }
+        else
+        {
+            Debug.Log("fail");
+            moveAmount = 1;
+        }
+    }
+
+    IEnumerator RollRoutine()
+    {
+        if (bm.isMoving) yield break;
+        canRoll = false;
+
+        finalNum = getNum();
+        yield return StartCoroutine(rollNumber());
+
+        int moveAmount = finalNum;
+
+        if (bm.waitingForEvent)
+        {
+            EventRoll();
+            bm.waitingForEvent = false;
+        }
+
+        yield return StartCoroutine(bm.UpdatePlayer(moveAmount));
+
+        canRoll = true;
     }
 
     IEnumerator rollNumber()

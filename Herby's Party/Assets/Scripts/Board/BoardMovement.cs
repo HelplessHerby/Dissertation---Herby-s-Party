@@ -10,6 +10,7 @@ public class BoardMovement : MonoBehaviour
     public NavMeshAgent agent;
     public int curTileIndex = 0;
     public bool isMoving = false;
+    public bool waitingForEvent = false;
     public bool turnFinished;
     public void Start()
     {
@@ -22,8 +23,6 @@ public class BoardMovement : MonoBehaviour
     }
     private void Update()
     {
-        //Playtesting purposes
-        dr.canRoll = !isMoving;
     }
 
     public IEnumerator UpdatePlayer(int moveAmount)
@@ -58,7 +57,10 @@ public class BoardMovement : MonoBehaviour
             if (tb.shouldBreak)
             {
                 tb.activate();
+                waitingForEvent = true;
                 isMoving = false;
+                dr.canRoll = true;
+                yield break;
             }
         }
         isMoving = false;

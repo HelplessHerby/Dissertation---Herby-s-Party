@@ -21,7 +21,7 @@ public class GameBehaviour : MonoBehaviour
 
         BoardMovement curPlayer = players[curPlay];
 
-        if (curPlayer.turnFinished)
+        if (curPlayer.turnFinished && !curPlayer.waitingForEvent)
         {
             EndTurn();
         }
