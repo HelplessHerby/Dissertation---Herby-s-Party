@@ -100,6 +100,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""db35940e-8a54-4921-9f9b-1918941fba24"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -111,6 +120,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""24b76d96-a2a7-43b4-896c-a08860a36915"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -134,6 +154,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // BoardMap
         m_BoardMap = asset.FindActionMap("BoardMap", throwIfNotFound: true);
         m_BoardMap_Roll = m_BoardMap.FindAction("Roll", throwIfNotFound: true);
+        m_BoardMap_Move = m_BoardMap.FindAction("Move", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -215,6 +236,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_BoardMap;
     private List<IBoardMapActions> m_BoardMapActionsCallbackInterfaces = new List<IBoardMapActions>();
     private readonly InputAction m_BoardMap_Roll;
+    private readonly InputAction m_BoardMap_Move;
     /// <summary>
     /// Provides access to input actions defined in input action map "BoardMap".
     /// </summary>
@@ -230,6 +252,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "BoardMap/Roll".
         /// </summary>
         public InputAction @Roll => m_Wrapper.m_BoardMap_Roll;
+        /// <summary>
+        /// Provides access to the underlying input action "BoardMap/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_BoardMap_Move;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -259,6 +285,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Roll.started += instance.OnRoll;
             @Roll.performed += instance.OnRoll;
             @Roll.canceled += instance.OnRoll;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
         }
 
         /// <summary>
@@ -273,6 +302,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Roll.started -= instance.OnRoll;
             @Roll.performed -= instance.OnRoll;
             @Roll.canceled -= instance.OnRoll;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
         }
 
         /// <summary>
@@ -333,5 +365,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRoll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
     }
 }
