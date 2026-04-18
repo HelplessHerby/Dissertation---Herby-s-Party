@@ -11,6 +11,13 @@ public class SheepMovement : MonoBehaviour
     public float minZ = 0f;
     public float maxZ = 30f;
 
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     private void Start()
     {
         PickNewDir();
@@ -25,16 +32,17 @@ public class SheepMovement : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(1, 2));
 
             isMoving = false;
+            rb.linearVelocity = Vector3.zero;
             yield return new WaitForSeconds(Random.Range(1, 5));
 
             PickNewDir();
         }
     }
-    void Update()
+    void FixedUpdate()
     {
         if(!isMoving) return;
 
-        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+        rb.linearVelocity = direction * speed;
 
         KeepInsideBounds();
     }
