@@ -55,22 +55,30 @@ public class SheepMovement : MonoBehaviour
 
     void KeepInsideBounds()
     {
-        Vector3 pos = transform.position;
-
-        //Clamp
-        pos.x = Mathf.Clamp(pos.x, minX, maxX);
-        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
-
-        transform.position = pos;
-
-        if (pos.x <= minX && pos.x >= maxX) 
+        Vector3 pos = rb.position;
+        float buffer = 0.1f;
+        if (pos.x <= minX)
         {
-            direction.x *= -1;
+            direction.x = Mathf.Abs(direction.x);
+            pos.x = minX + buffer;
+            rb.position = pos;
+        }
+        else if (pos.x >= maxX) {
+            direction.x = -Mathf.Abs(direction.x);
+            pos.x = maxX - buffer;
+            rb.position = pos;
         }
 
-        if(pos.z <= minZ && pos.z >= maxZ)
+        if (pos.z <= minZ)
         {
-            direction.z *= -1;
+            direction.z = Mathf.Abs(direction.z);
+            pos.z = minZ + buffer;
+            rb.position = pos;
+        }
+        else if (pos.z >= maxZ) { 
+            direction.z = -Mathf.Abs(direction.z);
+            pos.z = maxZ - buffer;
+            rb.position = pos;
         }
     }
 
