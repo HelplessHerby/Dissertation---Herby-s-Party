@@ -5,25 +5,42 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 6f;
 
     private Vector2 moveInput;
-    private CharacterController cc;
+    public Rigidbody rb;
+    public bool canMove;
+
+    public SheepMinigame minigame;
 
     private void Start()
     {
-        cc = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
     public void OnMove(InputAction.CallbackContext ctx)
     {
         moveInput = ctx.ReadValue<Vector2>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y);
-
-        if(move.magnitude > 1f)
+        if (canMove)
         {
-            move.Normalize();
+            Vector3 move = new Vector3(moveInput.x , 0f, moveInput.y);
+
+            if (move.magnitude > 1f)
+            {
+                move.Normalize();
+            }
+            rb.linearVelocity = move * moveSpeed;
+
+
         }
-        cc.Move(move * moveSpeed * Time.deltaTime);
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("FinishLine"))
+        {
+            StartCoroutine(minigame.PlayerFinished(this));
+        }
     }
 }
