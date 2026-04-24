@@ -5,6 +5,9 @@ using UnityEngine;
 public class CubeManager : MonoBehaviour
 {
     public List<Cube> cubes = new List<Cube>();
+    public List<GameObject> players = new List<GameObject>();
+    private HashSet<GameObject> alivePlayers = new HashSet<GameObject>();
+    public int playerCount;
 
     public float roundTime = 5f;
 
@@ -13,6 +16,10 @@ public class CubeManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(GameLoop());
+        foreach(var p in players)
+        {
+            alivePlayers.Add(p);
+        }
     }
 
     IEnumerator GameLoop()
@@ -53,5 +60,30 @@ public class CubeManager : MonoBehaviour
         {
             cube.SetActive(true);
         }
+    }
+
+    public void PlayerDeath(GameObject player)
+    {
+        alivePlayers.Remove(player);
+        Debug.Log($"{player.name} has died");
+        CheckWin();
+    }
+    void CheckWin()
+    {
+        if (alivePlayers.Count == 1)
+        {
+            foreach (var player in alivePlayers)
+            {
+                Debug.Log($"{player.name} Wins!!");
+            }
+        }else if(alivePlayers.Count == 0)
+        {
+            Debug.Log("No winners");
+            EndGame();
+        }
+    }
+    void EndGame()
+    {
+
     }
 }

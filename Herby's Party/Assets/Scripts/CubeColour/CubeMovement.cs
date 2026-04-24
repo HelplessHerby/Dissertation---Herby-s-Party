@@ -7,7 +7,7 @@ public class CubeMovement : MonoBehaviour
     private Vector2 moveInput;
     public Rigidbody rb;
 
-
+    public CubeManager cubeManager;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -28,5 +28,15 @@ public class CubeMovement : MonoBehaviour
         rb.linearVelocity = move * moveSpeed;
 
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Lava"))
+        {
+            cubeManager.PlayerDeath(this.gameObject);
+        }
+    }
+
 
 }
