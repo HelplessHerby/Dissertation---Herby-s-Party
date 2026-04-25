@@ -37,7 +37,7 @@ public class DiceRoll : MonoBehaviour
         StartCoroutine(rollNumber());
         int moveAmount;
 
-        if(finalNum > 4)
+        if(finalNum >= 4)
         {
             Debug.Log("win");
             moveAmount = finalNum;
@@ -45,7 +45,7 @@ public class DiceRoll : MonoBehaviour
         else
         {
             Debug.Log("fail");
-            moveAmount = 1;
+            moveAmount = 0;
         }
     }
 

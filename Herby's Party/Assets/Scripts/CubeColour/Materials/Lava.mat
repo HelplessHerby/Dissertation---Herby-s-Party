@@ -69,11 +69,11 @@ Material:
     - _FlowSpeed: 1
     - _FlowStrength: 0
     - _HeightMap: 1
-    - _IslandDensity: 12.33
+    - _IslandDensity: 17.82
     - _LavaSpeed: 0.01
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Thickness: 0.37
+    - _Thickness: 0.2
     - _ThicknessFalloff: 0
     m_Colors:
     - _LavaColour: {r: 1.9245284, g: 1.1953089, b: 0.71715915, a: 0}

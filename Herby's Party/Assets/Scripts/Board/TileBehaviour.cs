@@ -6,6 +6,8 @@ public class TileBehaviour : MonoBehaviour
     public int tileType;
     public bool shouldBreak;
     public string levelToLoad;
+
+     
     public void Start()
     {
         switch (tileType)
@@ -42,7 +44,8 @@ public class TileBehaviour : MonoBehaviour
             case 2:
                 break;
             case 3:
-                //SceneManager.LoadScene(levelToLoad);
+                GameSession.instance.SaveBoard();
+                SceneManager.LoadScene(levelToLoad);
                 break;
             case 4:
                 break;

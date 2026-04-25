@@ -1,13 +1,27 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class PlayerSaveData
+{
+    public int tileIndex;
+
+}
+
 
 public class GameSession : MonoBehaviour
 {
     public static GameSession instance;
 
     public PlayerInput[] players;
+
+    public List<PlayerSaveData> savedPlayers = new List<PlayerSaveData>();
+
     private void Awake()
     {
         if (instance != null) { 
@@ -24,6 +38,11 @@ public class GameSession : MonoBehaviour
     {
         InitPlayers();
         RebindControls();
+
+        if(scene.name == "Board")
+        {
+            StartCoroutine(DelayLoad());
+        }
     }
     void InitPlayers()
     {
@@ -85,4 +104,53 @@ public class GameSession : MonoBehaviour
                 p.ActivateInput();
         }
     }
+
+    public void SaveBoard()
+    {
+        BoardMovement[] boardPlayers = FindObjectsOfType<BoardMovement>();
+
+        System.Array.Sort(boardPlayers, (a, b) =>
+        a.gameObject.name.CompareTo(b.gameObject.tag));
+        savedPlayers.Clear();
+
+        for (int i = 0; i < boardPlayers.Length; i++)
+        {
+            PlayerSaveData data = new PlayerSaveData();
+
+            data.tileIndex = boardPlayers[i].curTileIndex;
+
+            savedPlayers.Add(data);
+        }
+
+        Debug.Log("Board Data Saved");
+    }
+
+    public void LoadBoard()
+    {
+        if(savedPlayers.Count == 0) return;
+        BoardMovement[] boardPlayers = FindObjectsOfType<BoardMovement>();
+
+        System.Array.Sort(boardPlayers, (a, b) =>
+        a.gameObject.name.CompareTo(b.gameObject.tag));
+        //savedPlayers.Clear();
+
+        for (int i = 0;i < savedPlayers.Count; i++)
+        {
+            var data = savedPlayers[i]; 
+            var player = boardPlayers[i];
+
+            player.curTileIndex = data.tileIndex;
+
+            player.transform.position = player.tileArr[data.tileIndex].transform.position;
+        }
+
+        Debug.Log("Board Loaded");
+    }
+
+    public IEnumerator DelayLoad()
+    {
+        yield return null;
+        LoadBoard();
+    }
+
 }

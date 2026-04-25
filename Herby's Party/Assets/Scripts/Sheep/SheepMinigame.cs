@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SheepMinigame : MonoBehaviour
 {
@@ -14,6 +15,14 @@ public class SheepMinigame : MonoBehaviour
     private void Start()
     {
         StartCoroutine(GameLoop());
+    }
+
+    private void Update()
+    {
+        if (finished)
+        {
+            SceneManager.LoadScene("Board");
+        }
     }
     IEnumerator GameLoop()
     {

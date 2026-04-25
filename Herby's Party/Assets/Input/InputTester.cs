@@ -8,6 +8,6 @@ public class InputTester : MonoBehaviour
         this.gameObject.GetComponent<Renderer>().material.color = Color.red;
         Debug.Log($"ROll {this.gameObject.name}");
 
-        SceneManager.LoadScene("1_Minigame");
+        SceneManager.LoadScene("Board");
     }
 }
