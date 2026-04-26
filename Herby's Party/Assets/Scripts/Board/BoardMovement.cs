@@ -5,6 +5,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class BoardMovement : MonoBehaviour
 {
+    public Animator anim;
     private DiceRoll dr;
     public GameObject[] tileArr;
     public GameObject tilePar;
@@ -24,6 +25,7 @@ public class BoardMovement : MonoBehaviour
     }
     private void Update()
     {
+       anim.SetBool("isWalking", isMoving);
     }
 
     public IEnumerator UpdatePlayer(int moveAmount)
