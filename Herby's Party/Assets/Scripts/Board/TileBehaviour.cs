@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,8 +6,8 @@ public class TileBehaviour : MonoBehaviour
 {
     public int tileType;
     public bool shouldBreak;
-    public string levelToLoad;
 
+    public List<string> minigames;
      
     public void Start()
     {
@@ -29,23 +30,26 @@ public class TileBehaviour : MonoBehaviour
                 shouldBreak = true;
                 break;
             case 4: // Event
-                GetComponent<Renderer>().material.color = Color.white;
+                GetComponent<Renderer>().material.color = Color.black;
                 shouldBreak = true;
                 break;
         }
     }
 
-    public void activate()
+    public void activate(BoardMovement bm)
     {
         Debug.Log("Tile Activated");
         switch (tileType) {
             case 1:
+                StartCoroutine(bm.UpdatePlayer(5));
                 break;
             case 2:
+                StartCoroutine(bm.UpdatePlayer(-5));
                 break;
             case 3:
+                int lvl = Random.Range(0, minigames.Count);
                 GameSession.instance.SaveBoard();
-                SceneManager.LoadScene(levelToLoad);
+                SceneManager.LoadScene(minigames[lvl]);
                 break;
             case 4:
                 break;

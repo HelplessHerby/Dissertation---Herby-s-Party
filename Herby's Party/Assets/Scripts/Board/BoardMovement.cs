@@ -53,11 +53,18 @@ public class BoardMovement : MonoBehaviour
             }
 
             curTileIndex = i;
+
+            //Win
+            if (curTileIndex >= tileArr.Length - 1) {
+                HandleWin();
+                yield break;
+            }
+
             //Special Tiles
             TileBehaviour tb = tileArr[i].GetComponent<TileBehaviour>();
             if (tb.shouldBreak)
             {
-                tb.activate();
+                tb.activate(this);
                 waitingForEvent = true;
                 isMoving = false;
                 dr.canRoll = true;
@@ -67,5 +74,14 @@ public class BoardMovement : MonoBehaviour
         isMoving = false;
         turnFinished = true;
 
+    }
+    void HandleWin()
+    {
+        Debug.Log(gameObject.name + " WINS!");
+
+        isMoving = false;
+        turnFinished = true;
+
+        dr.canRoll = false;
     }
 }
