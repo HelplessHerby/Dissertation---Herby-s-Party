@@ -8,7 +8,7 @@ public class SheepMinigame : MonoBehaviour
     public PlayerMovement[] players;
 
     public TextMeshProUGUI startText;
-
+    public GameObject countdown;
     public float countdownTimer = 5f;
     public bool finished;
 
@@ -30,6 +30,7 @@ public class SheepMinigame : MonoBehaviour
         {
             p.canMove = false;
         }
+        countdown.SetActive(true);
 
         float timer = countdownTimer;
 
@@ -45,6 +46,7 @@ public class SheepMinigame : MonoBehaviour
         startText.color = Color.green;
         yield return new WaitForSeconds(1f);
         startText.text = "";
+        countdown.SetActive(false);
 
         foreach (var p in players)
         {

@@ -9,7 +9,6 @@ public class Cube : MonoBehaviour
         Blue,
         Green,
         Yellow,
-        Orange,
         Cyan,
         Pink,
         White

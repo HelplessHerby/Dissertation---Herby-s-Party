@@ -1,9 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class CubeMovement : MonoBehaviour
 {
     public float moveSpeed = 6f;
-
+    public bool canMove;
+    public Animator anim;
     private Vector2 moveInput;
     public Rigidbody rb;
 
@@ -19,13 +21,23 @@ public class CubeMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y);
-
-        if (move.magnitude > 1f)
+        if (canMove)
         {
-            move.Normalize();
+            Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y);
+
+            if (move.magnitude > 1f)
+            {
+                move.Normalize();
+            }
+            rb.linearVelocity = move * moveSpeed;
+            if (move != Vector3.zero)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(move);
+                rb.MoveRotation(targetRot);
+            }
         }
-        rb.linearVelocity = move * moveSpeed;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y - 3f, rb.linearVelocity.z);
+        anim.SetBool("isWalking", moveInput != Vector2.zero && canMove);
 
     }
 

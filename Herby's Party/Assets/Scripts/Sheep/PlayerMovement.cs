@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     public Rigidbody rb;
     public bool canMove;
-
+    public Animator anim;
     public SheepMinigame minigame;
 
     private void Start()
@@ -30,9 +30,14 @@ public class PlayerMovement : MonoBehaviour
                 move.Normalize();
             }
             rb.linearVelocity = move * moveSpeed;
-
-
+            if (move != Vector3.zero)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(move);
+                rb.MoveRotation(targetRot);
+            }
         }
+
+        anim.SetBool("isWalking", moveInput != Vector2.zero);
 
     }
 

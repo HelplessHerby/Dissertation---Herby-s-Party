@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,11 +10,18 @@ public class CubeManager : MonoBehaviour
     public List<GameObject> players = new List<GameObject>();
     private HashSet<GameObject> alivePlayers = new HashSet<GameObject>();
     public int playerCount;
-
+    public TextMeshProUGUI startText;
     public float roundTime = 5f;
-
+    public float countdownTimer = 5f;
+    public GameObject countdown;
     private Cube.TileColour curColour;
+    public bool finished;
+    public MeshRenderer sign;
 
+    public Material[] colours;
+    
+    
+    
     private void Start()
     {
         StartCoroutine(GameLoop());
@@ -25,6 +33,31 @@ public class CubeManager : MonoBehaviour
 
     IEnumerator GameLoop()
     {
+        foreach (var p in players)
+        {
+            p.GetComponent<CubeMovement>().canMove = false;
+        }
+        countdown.SetActive(true);
+        float timer = countdownTimer;
+
+        while (timer > 0)
+        {
+            startText.color = Color.red;
+            startText.text = "Starting in..." + timer;
+            yield return new WaitForSeconds(1f);
+            timer--;
+        }
+
+        startText.text = "START";
+        startText.color = Color.green;
+        yield return new WaitForSeconds(1f);
+        startText.text = "";
+        countdown.SetActive(false);
+
+        foreach (var p in players)
+        {
+            p.GetComponent<CubeMovement>().canMove = true;
+        }
         while (true)
         {
             PickNewColour();
@@ -42,18 +75,22 @@ public class CubeManager : MonoBehaviour
 
     void PickNewColour()
     {
-        int colourCount = System.Enum.GetValues(typeof(Cube.TileColour)).Length;
-        curColour = (Cube.TileColour)Random.Range(0, colourCount);
-
+        float rand = Random.Range(0, 6);
+        curColour = (Cube.TileColour)rand;
+        sign.material = colours[(int)rand];
         Debug.Log($"Safe Colour is: {curColour}");
     }
     void UpdateTiles()
     {
-        foreach (var cube in cubes) 
-        { 
-            bool isSafe = cube.tc == curColour;
-            cube.SetActive(isSafe);
+        if (!finished)
+        {
+            foreach (var cube in cubes)
+            {
+                bool isSafe = cube.tc == curColour;
+                cube.SetActive(isSafe);
+            }
         }
+
     }
     void ResetTiles()
     {
@@ -76,15 +113,25 @@ public class CubeManager : MonoBehaviour
             foreach (var player in alivePlayers)
             {
                 Debug.Log($"{player.name} Wins!!");
+                countdown.SetActive(true);
+                startText.text = player.name + " wins!!";
+                StartCoroutine(EndGame());
             }
-        }else if(alivePlayers.Count == 0)
+        }
+        else if(alivePlayers.Count == 0)
         {
             Debug.Log("No winners");
-            EndGame();
+            StartCoroutine(EndGame());
         }
     }
-    void EndGame()
+
+    IEnumerator EndGame()
     {
+        foreach (var p in players)
+        {
+            p.GetComponent<CubeMovement>().canMove = false;
+        }
+        yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("Board");
     }
 }
