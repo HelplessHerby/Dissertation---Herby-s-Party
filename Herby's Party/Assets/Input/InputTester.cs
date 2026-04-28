@@ -5,9 +5,6 @@ public class InputTester : MonoBehaviour
 {
     public void Roll()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = Color.red;
-        Debug.Log($"ROll {this.gameObject.name}");
-
-        SceneManager.LoadScene("Board");
+        this.gameObject.GetComponent<Renderer>().material.color = Color.green;
     }
 }

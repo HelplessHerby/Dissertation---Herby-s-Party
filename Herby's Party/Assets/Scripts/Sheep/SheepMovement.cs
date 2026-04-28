@@ -50,6 +50,11 @@ public class SheepMovement : MonoBehaviour
     void PickNewDir()
     {
         direction = new Vector3(Random.Range(-1f,1f), 0f, Random.Range(-1f,1f)).normalized;
+        if(direction != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(direction);
+            rb.MoveRotation(targetRot);
+        }
         transform.forward = direction;
     }
 
