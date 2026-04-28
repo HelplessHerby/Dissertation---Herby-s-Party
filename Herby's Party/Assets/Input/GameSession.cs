@@ -9,7 +9,9 @@ using UnityEngine.SceneManagement;
 [System.Serializable]
 public class PlayerSaveData
 {
+    public int ID;
     public int tileIndex;
+    public Vector3 pos;
 
 }
 
@@ -19,6 +21,9 @@ public class GameSession : MonoBehaviour
     public static GameSession instance;
 
     public PlayerInput[] players;
+
+    private Dictionary<int,int> playerToDevice = new Dictionary<int,int>();
+    private bool playersInit = false;
 
     public List<PlayerSaveData> savedPlayers = new List<PlayerSaveData>();
 
@@ -37,9 +42,18 @@ public class GameSession : MonoBehaviour
     private void onSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         InitPlayers();
-        RebindControls();
 
-        if(scene.name == "Board")
+        if (!playersInit)
+        {
+            initControls();
+            playersInit = true;
+        }
+        else
+        {
+            RebindControls();
+        }
+
+        if (scene.name == "Board")
         {
             StartCoroutine(DelayLoad());
         }
@@ -54,34 +68,21 @@ public class GameSession : MonoBehaviour
         if (p1 != null)
         {
             players[0] = p1.GetComponent<PlayerInput>();
-            players[0].DeactivateInput();
         }
         else Debug.LogWarning("P1 not found");
 
         if (p2 != null)
         {
             players[1] = p2.GetComponent<PlayerInput>();
-            players[1].DeactivateInput(); 
         }
         else Debug.LogWarning("P2 not found");
     }
 
-    void RebindControls()
+    void initControls()
     {
         var gamepads = Gamepad.all;
 
-        foreach (var p in players)
-        {
-            if (p == null) continue;
-
-            p.DeactivateInput();
-
-            if (p.user.valid)
-                p.user.UnpairDevices();
-        }
-
-        for (int i = 0; i < players.Length; i++)
-        {
+        for (int i = 0; i < players.Length; i++) {
             var player = players[i];
             if (player == null) continue;
 
@@ -89,35 +90,52 @@ public class GameSession : MonoBehaviour
             {
                 var pad = gamepads[i];
 
-                player.SwitchCurrentControlScheme(pad);
-                Debug.Log($"Player {i + 1} : {pad.displayName}");
-            }
-            else
-            {
-                player.DeactivateInput();
-            }
-        }
+                player.user.UnpairDevices();
+                InputUser.PerformPairingWithDevice(pad, player.user);
 
-        foreach (var p in players)
-        {
-            if (p != null)
-                p.ActivateInput();
+                playerToDevice[i] = pad.deviceId;
+            }
         }
     }
 
+
+    void RebindControls()
+    {
+        foreach (var pTD in playerToDevice)
+        {
+            int playerIndex = pTD.Key;
+            int deviceId = pTD.Value;
+
+            var player = players[playerIndex];
+            if (player == null) continue;
+
+            var device = InputSystem.GetDeviceById(deviceId);
+
+            if (device != null)
+            {
+                player.user.UnpairDevices();
+                InputUser.PerformPairingWithDevice(device, player.user);
+            }
+        }
+    }
     public void SaveBoard()
     {
-        BoardMovement[] boardPlayers = FindObjectsOfType<BoardMovement>();
-
-        System.Array.Sort(boardPlayers, (a, b) =>
-        a.gameObject.name.CompareTo(b.gameObject.tag));
         savedPlayers.Clear();
 
-        for (int i = 0; i < boardPlayers.Length; i++)
-        {
-            PlayerSaveData data = new PlayerSaveData();
+        for (int i = 0; i < players.Length; i++) 
+        { 
+            var playerInput = players[i];
+            if(playerInput == null) continue;
 
-            data.tileIndex = boardPlayers[i].curTileIndex;
+            var board = playerInput.GetComponent<BoardMovement>();
+            if (board == null) continue;
+
+            PlayerSaveData data = new PlayerSaveData
+            {
+                ID = i,
+                tileIndex = board.curTileIndex,
+                pos = playerInput.gameObject.transform.position,
+            };
 
             savedPlayers.Add(data);
         }
@@ -128,21 +146,24 @@ public class GameSession : MonoBehaviour
     public void LoadBoard()
     {
         if(savedPlayers.Count == 0) return;
-        BoardMovement[] boardPlayers = FindObjectsOfType<BoardMovement>();
-
-        System.Array.Sort(boardPlayers, (a, b) =>
-        a.gameObject.name.CompareTo(b.gameObject.tag));
-        //savedPlayers.Clear();
-
-        for (int i = 0;i < savedPlayers.Count; i++)
+        
+        foreach(var data in savedPlayers)
         {
-            var data = savedPlayers[i]; 
-            var player = boardPlayers[i];
+            if(data.ID >= players.Length) continue;
 
-            player.curTileIndex = data.tileIndex;
+            var playerInput = players[data.ID];
+            if (playerInput == null) continue;
 
-            player.transform.position = player.tileArr[data.tileIndex].transform.position;
+            var board = playerInput.GetComponent<BoardMovement>();
+            if (board == null) continue;
+
+            board.curTileIndex = data.tileIndex;
+
+            Vector3 targetPos = board.tileArr[data.tileIndex].transform.position;
+
+            board.agent.Warp(targetPos);
         }
+
 
         Debug.Log("Board Loaded");
     }

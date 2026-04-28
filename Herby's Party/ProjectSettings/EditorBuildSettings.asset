@@ -6,14 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/ControllerAssign.unity
+    guid: cb46cece28d85c84a96d5f08729410b5
+  - enabled: 1
     path: Assets/Scenes/Board.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
     path: Assets/Scenes/TestMinigame.unity
     guid: 26d23049e7dcc4b4bb7de3d71ac6d05b
-  - enabled: 1
-    path: Assets/Scenes/ControllerAssign.unity
-    guid: cb46cece28d85c84a96d5f08729410b5
   - enabled: 1
     path: Assets/Scenes/1_Minigame.unity
     guid: ecff55e4a3aacb040b71a668eabe70bb

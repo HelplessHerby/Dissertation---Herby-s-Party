@@ -2189,8 +2189,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
         type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
       propertyPath: m_NeverAutoSwitchControlSchemes
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: db35940e-8a54-4921-9f9b-1918941fba24
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: 'BoardMap/Move[/DualSenseGamepadHID/leftStick,/DualSenseGamepadHID1/leftStick]'
       objectReference: {fileID: 0}
     - target: {fileID: 1043668635824588581, guid: 116e4b36cb04a78409301ae10327559c,
         type: 3}
@@ -8815,8 +8830,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
         type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
       propertyPath: m_NeverAutoSwitchControlSchemes
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: db35940e-8a54-4921-9f9b-1918941fba24
+      objectReference: {fileID: 0}
+    - target: {fileID: 660291843634975462, guid: 116e4b36cb04a78409301ae10327559c,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: 'BoardMap/Move[/DualSenseGamepadHID/leftStick,/DualSenseGamepadHID1/leftStick]'
       objectReference: {fileID: 0}
     - target: {fileID: 1043668635824588581, guid: 116e4b36cb04a78409301ae10327559c,
         type: 3}

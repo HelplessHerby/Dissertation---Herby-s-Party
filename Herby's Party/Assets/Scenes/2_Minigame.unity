@@ -652,8 +652,8 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: db35940e-8a54-4921-9f9b-1918941fba24
     m_ActionName: BoardMap/Move
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: GamePad
   m_DefaultActionMap: BoardMap
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -4530,8 +4530,8 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: db35940e-8a54-4921-9f9b-1918941fba24
     m_ActionName: BoardMap/Move
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: GamePad
   m_DefaultActionMap: BoardMap
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
